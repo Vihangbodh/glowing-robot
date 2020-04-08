@@ -134,8 +134,8 @@ def _sha_backend(text_to_hash: str, _buffer: str, _counter: int,
     return_val = [hex(stuff) for stuff in _initial_hashes[:_output_size]]
 
     if hex_output is True:
-        return_val = [int(stuff, base=16) for stuff in return_val]
-        return return_val
+        return_val = [str(int(stuff, base=16)) for stuff in return_val]
+        return ''.join(return_val)
 
     return ''.join(return_val)
 
@@ -158,3 +158,19 @@ def sha_512(text_to_hash: str, hex_digest: bool = False) -> str:
 
     # start the backend function
     return _sha_backend(text_to_hash, _buffer, _counter, _output_size, hex_output=hex_digest)
+
+
+def demo_everything() -> None:
+    """
+    USE THIS CODE TO RUN A DEMO OF THE ABOVE FUNCTION
+    """
+    message = "Hello, this is a message from Goddard Guryon. " \
+              "If you can read this message, it means you have successfully broken my hash algorithm. " \
+              "If you cannot read this, congratulations on having seen a working hash algorithm!"
+    print("Starting with given message:\n'{}'".format(message))
+    hex_output = sha_512(message)
+    integer_output = sha_512(message, True)
+    print("The generated hash output is: {}\nand its integer form is: {}".format(hex_output, integer_output))
+
+
+demo_everything()
