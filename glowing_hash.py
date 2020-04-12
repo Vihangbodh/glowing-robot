@@ -130,14 +130,21 @@ def _sha_backend(text_to_hash: str, _buffer: str, _counter: int,
         # update buffer
         _buffer = _buffer[128:]
 
+    # I admit I have done some dumb stuff below, for the sole reason that I could not get
+    # my hash value to the correct size. So I remove the '0x' from the beginning of all the hex values
+    # to shorten the output value from 143 bits to 127 bits (which might actually be a good thing
+    # to do, IDK), and then simply add the first letter of my final hash value at the back of
+    # the value (that's the dumb part)...if somebody sees this and has any idea of why my output
+    # is not of the correct length (along with all the other stuff I got wrong), please let me know :)
+
     # return the hash value
-    return_val = [hex(stuff) for stuff in _initial_hashes[:_output_size]]
+    return_val = [hex(stuff)[2:] for stuff in _initial_hashes[:_output_size]]
 
     if hex_output is True:
         return_val = [str(int(stuff, base=16)) for stuff in return_val]
         return ''.join(return_val)
 
-    return ''.join(return_val)
+    return ''.join(return_val) + return_val[0][0]  # + pad[0]
 
 
 def sha_512(text_to_hash: str, hex_digest: bool = False) -> str:
@@ -171,6 +178,3 @@ def demo_everything() -> None:
     hex_output = sha_512(message)
     integer_output = sha_512(message, True)
     print("The generated hash output is: {}\nand its integer form is: {}".format(hex_output, integer_output))
-
-
-demo_everything()
